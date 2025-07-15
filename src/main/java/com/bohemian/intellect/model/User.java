@@ -116,4 +116,18 @@ public class User {
         this.resultId = resultId;
     }
 
+    public User(String id, String username, String name, String password, String email, boolean isVerified, List<String> roles, List<String> quizID, List<String> resultId) {
+        this.id = id;
+        this.username = username;
+        this.name = name;
+        this.password = password;
+        this.email = email;
+        this.isVerified = isVerified;
+        this.roles = roles;
+        this.quizID = quizID;
+        this.resultId = resultId;
+    }
+
+    public User() {
+    }
 }

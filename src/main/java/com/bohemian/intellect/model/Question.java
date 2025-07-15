@@ -45,4 +45,14 @@ public class Question {
         return quizId;
     }
 
+    public Question(Long id, String title, List<String> options, String correctAnswer, String quizId) {
+        this.id = id;
+        this.title = title;
+        this.options = options;
+        this.correctAnswer = correctAnswer;
+        this.quizId = quizId;
+    }
+
+    public Question() {
+    }
 }

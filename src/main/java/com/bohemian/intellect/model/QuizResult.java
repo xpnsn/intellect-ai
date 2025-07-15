@@ -64,4 +64,18 @@ public class QuizResult {
     public LocalDateTime getEndedAt() {
         return endedAt;
     }
+
+    public QuizResult(String resultID, String quizId, String username, int totalQuestions, int correctAnswers, List<String> answers, LocalDateTime startedAt, LocalDateTime endedAt) {
+        this.resultID = resultID;
+        this.quizId = quizId;
+        this.username = username;
+        this.totalQuestions = totalQuestions;
+        this.correctAnswers = correctAnswers;
+        this.answers = answers;
+        this.startedAt = startedAt;
+        this.endedAt = endedAt;
+    }
+
+    public QuizResult() {
+    }
 }

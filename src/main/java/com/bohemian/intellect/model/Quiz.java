@@ -64,4 +64,15 @@ public class Quiz {
     public void setQuestionId(List<Long> questionId) {
         this.questionId = questionId;
     }
+
+    public Quiz(String id, String title, String description, String username, List<Long> questionId) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.username = username;
+        this.questionId = questionId;
+    }
+
+    public Quiz() {
+    }
 }

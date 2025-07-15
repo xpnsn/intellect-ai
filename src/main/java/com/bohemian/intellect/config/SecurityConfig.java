@@ -53,6 +53,7 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults())
                 .build();
     }
 

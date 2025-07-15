@@ -24,6 +24,11 @@ public class UserController {
         return this.userService.getAllUsers();
     }
 
+    @GetMapping("profile")
+    public ResponseEntity<?> getProfile() {
+        return userService.getUser();
+    }
+
     @GetMapping({"{username}"})
     public ResponseEntity<?> getUserByUsername(@PathVariable String username) {
         return this.userService.getUserByUsername(username);

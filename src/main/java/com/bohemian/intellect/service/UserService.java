@@ -45,6 +45,12 @@ public class UserService {
         return this.userRepository.findAll();
     }
 
+    public ResponseEntity<?> getUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsername(username);
+        UserDto userDto = mapper.convertValue(user, UserDto.class);
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
+    }
     public ResponseEntity<?> getUserByUsername(String username) {
         User user = this.userRepository.findByUsername(username);
         if (user == null) {

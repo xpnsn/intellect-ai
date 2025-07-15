@@ -38,7 +38,7 @@ public class EmailService {
         String body = "";
 
         try {
-            Resource resource = resourceLoader.getResource("classpath:template/email/" + emailSenderDto.type() + ".html");
+            Resource resource = resourceLoader.getResource("classpath:templates/email/" + emailSenderDto.type() + ".html");
             body = Files.readString(resource.getFile().toPath());
         } catch (IOException ex) {
             throw new RuntimeException("Failed to load email template: " + emailSenderDto.type());
