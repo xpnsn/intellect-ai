@@ -16,8 +16,8 @@ import java.util.List;
 @Entity
 @Table(name = "result_table")
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+//@AllArgsConstructor
+//@NoArgsConstructor
 public class QuizResult {
     @Id
     @GeneratedValue(

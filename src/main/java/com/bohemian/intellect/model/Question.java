@@ -12,8 +12,8 @@ import java.util.List;
 
 @Entity(name = "question_table")
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+//@AllArgsConstructor
+//@NoArgsConstructor
 public class Question {
     @Id
     @GeneratedValue(
