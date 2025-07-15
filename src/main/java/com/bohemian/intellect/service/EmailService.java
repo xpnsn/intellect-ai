@@ -8,6 +8,8 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.Message.RecipientType;
 import jakarta.mail.internet.MimeMessage;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.security.SecureRandom;
 import java.util.Iterator;
@@ -39,10 +41,13 @@ public class EmailService {
 
         try {
             Resource resource = resourceLoader.getResource("classpath:templates/email/" + emailSenderDto.type() + ".html");
-            body = Files.readString(resource.getFile().toPath());
+            try (InputStream inputStream = resource.getInputStream()) {
+                body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+            }
         } catch (IOException ex) {
-            throw new RuntimeException("Failed to load email template: " + emailSenderDto.type());
+            throw new RuntimeException("Failed to load email template: " + emailSenderDto.type(), ex);
         }
+
 
         for(Map.Entry<String, String> entry : emailSenderDto.data().entrySet()) {
             body = body.replace("{{"+entry.getKey()+"}}", entry.getValue());
