@@ -88,17 +88,18 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void addResultToUser(String id) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsername(username);
+
+        user.getResultId().add(id);
+        userRepository.save(user);
+    }
+
     public void removeQuizToUser(String id) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username);
         user.getQuizID().remove(id);
-        userRepository.save(user);
-    }
-
-    public void addResult(String id) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findByUsername(username);
-        user.getResultId().add(id);
         userRepository.save(user);
     }
 }

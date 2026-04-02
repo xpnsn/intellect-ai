@@ -25,26 +25,6 @@ public class Question {
     private String correctAnswer;
     private String quizId;
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public List<String> getOptions() {
-        return options;
-    }
-
-    public String getCorrectAnswer() {
-        return correctAnswer;
-    }
-
-    public String getQuizId() {
-        return quizId;
-    }
-
     public Question(Long id, String title, List<String> options, String correctAnswer, String quizId) {
         this.id = id;
         this.title = title;

@@ -10,6 +10,8 @@ import com.bohemian.intellect.repository.QuestionRepository;
 import com.bohemian.intellect.repository.QuizRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -51,7 +53,24 @@ public class QuestionService {
         return mapper.convertValue(question, QuestionDto.class);
     }
 
-    public List<Question> getQuestionFromQuiz(String quizId) {
+    public ResponseEntity<?> getQuestionFromQuiz(String quizId) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Quiz quiz = quizRepository.findById(quizId).orElseThrow(() -> {
+            return new ResourceNotFoundException(quizId, "Quiz");
+        });
+        if (!quiz.getUsername().equals(username)) {
+            throw new UnauthorizedAccessException("User does not have access to this quiz.");
+        }
+        List<QuestionDto> list = quiz.getQuestionId().stream().map(id -> {
+            Question question = questionRepository.findById(id).orElseThrow(() -> {
+                return new ResourceNotFoundException(id.toString(), "Question");
+            });
+            return mapper.convertValue(question, QuestionDto.class);
+        }).toList();
+        return new ResponseEntity<>(list, HttpStatus.OK);
+    }
+
+    public List<Question> getRawQuestionFromQuiz(String quizId) {
         return questionRepository.findAllByQuizId(quizId);
     }
 

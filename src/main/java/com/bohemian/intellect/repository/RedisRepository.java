@@ -51,7 +51,7 @@ public class RedisRepository {
 
     public boolean validForOps(String userId) {
         String key = "COOLDOWN:" + userId;
-        return Boolean.TRUE.equals(this.redisTemplate.hasKey(key));
+        return this.redisTemplate.hasKey(key);
     }
 
     public void clear(String userId) {
@@ -67,7 +67,7 @@ public class RedisRepository {
 
     public String getTimeoutTime(String userId) {
         String key = "COOLDOWN:" + userId;
-        if (Boolean.TRUE.equals(this.redisTemplate.hasKey(key))) {
+        if (this.redisTemplate.hasKey(key)) {
             Long expire = this.redisTemplate.getExpire(key);
             Duration duration = Duration.ofSeconds(expire);
             int hours = duration.toHoursPart();

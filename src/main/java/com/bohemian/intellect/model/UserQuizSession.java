@@ -18,7 +18,7 @@ public class UserQuizSession {
     private final String quizId;
     private final List<Question> questions;
     private int currentIndex;
-    private List<String> answers;
+    private final List<String> answers;
     private final LocalDateTime startedAt;
 
     public UserQuizSession(String username, String quizId, List<Question> questions, LocalDateTime startedAt) {

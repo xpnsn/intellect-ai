@@ -33,38 +33,6 @@ public class QuizResult {
     private LocalDateTime endedAt;
 
 
-    public String getResultID() {
-        return resultID;
-    }
-
-    public String getQuizId() {
-        return quizId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public int getTotalQuestions() {
-        return totalQuestions;
-    }
-
-    public int getCorrectAnswers() {
-        return correctAnswers;
-    }
-
-    public List<String> getAnswers() {
-        return answers;
-    }
-
-    public LocalDateTime getStartedAt() {
-        return startedAt;
-    }
-
-    public LocalDateTime getEndedAt() {
-        return endedAt;
-    }
-
     public QuizResult(String resultID, String quizId, String username, int totalQuestions, int correctAnswers, List<String> answers, LocalDateTime startedAt, LocalDateTime endedAt) {
         this.resultID = resultID;
         this.quizId = quizId;

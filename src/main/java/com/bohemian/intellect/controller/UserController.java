@@ -13,15 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping({"user"})
 public class UserController {
-    @Autowired
-    UserService userService;
+    private final UserService userService;
 
-    public UserController() {
-    }
-
-    @GetMapping
-    public List<User> getAllUsers() {
-        return this.userService.getAllUsers();
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("profile")

@@ -47,7 +47,15 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http, AuthFilter authFilter) throws Exception {
 
         return http.authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/sign-up", "/login", "/ws/**").permitAll()
+                        .requestMatchers(
+                                "/sign-up",
+                                "/login",
+                                "/ws/**",
+                                "/v3/api-docs",
+                                "/v3/api-docs/**",
+                                "swagger-ui/**",
+                                "swagger-ui.html"
+                        ).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(Customizer.withDefaults())

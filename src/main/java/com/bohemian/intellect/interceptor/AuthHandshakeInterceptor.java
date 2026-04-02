@@ -6,7 +6,11 @@
 package com.bohemian.intellect.interceptor;
 
 import com.bohemian.intellect.service.JwtService;
+
+import java.util.Collections;
 import java.util.Map;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
@@ -23,17 +27,44 @@ public class AuthHandshakeInterceptor implements HandshakeInterceptor {
         this.jwtService = jwtService;
     }
 
-    public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
-        if (request instanceof ServletServerHttpRequest servletServerHttpRequest) {
-            String token = servletServerHttpRequest.getServletRequest().getParameter("token");
-            if (token != null && !this.jwtService.isTokenExpired(token)) {
-                String username = this.jwtService.extractUsername(token);
-                attributes.put("user", new UsernamePasswordAuthenticationToken(username, (Object)null));
-            }
+    public boolean beforeHandshake(
+            ServerHttpRequest request,
+            ServerHttpResponse response,
+            WebSocketHandler wsHandler,
+            Map<String, Object> attributes) {
+
+        if (!(request instanceof ServletServerHttpRequest servletRequest)) {
+            response.setStatusCode(HttpStatus.UNAUTHORIZED);
+            return false;
         }
 
-        return true;
+        String token = servletRequest.getServletRequest().getParameter("token");
+        if (token == null || token.isBlank()) {
+            response.setStatusCode(HttpStatus.UNAUTHORIZED);
+            return false;
+        }
+
+        try {
+            if (jwtService.isTokenExpired(token)) {
+                response.setStatusCode(HttpStatus.UNAUTHORIZED);
+                return false;
+            }
+
+            String username = jwtService.extractUsername(token);
+            if (username == null || username.isBlank()) {
+                response.setStatusCode(HttpStatus.UNAUTHORIZED);
+                return false;
+            }
+
+            attributes.put("user",
+                    new UsernamePasswordAuthenticationToken(username, null, Collections.emptyList()));
+            return true;
+        } catch (Exception ex) {
+            response.setStatusCode(HttpStatus.UNAUTHORIZED);
+            return false;
+        }
     }
+
 
     public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Exception exception) {
     }

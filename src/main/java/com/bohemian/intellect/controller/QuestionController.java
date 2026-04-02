@@ -22,11 +22,11 @@ public class QuestionController {
         this.questionService = questionService;
     }
 
-    @GetMapping({"{id}"})
-    public ResponseEntity<?> getQuestionById(@PathVariable Long id) {
-        QuestionDto question = questionService.getQuestionById(id);
-        return new ResponseEntity<>(question, HttpStatus.OK);
-    }
+//    @GetMapping({"{id}"})
+//    public ResponseEntity<?> getQuestionById(@PathVariable Long id) {
+//        QuestionDto question = questionService.getQuestionById(id);
+//        return new ResponseEntity<>(question, HttpStatus.OK);
+//    }
 
     @GetMapping({"quiz/{id}"})
     public ResponseEntity<?> getQuizById(@PathVariable String id) {

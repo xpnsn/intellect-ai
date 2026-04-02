@@ -30,7 +30,7 @@ public class QuizSocketService {
 
     public QuestionDto startQuiz(QuizStartRequest req, Principal principal) {
         String username = principal.getName();
-        List<Question> questions = questionService.getQuestionFromQuiz(req.quizId());
+        List<Question> questions = questionService.getRawQuestionFromQuiz(req.quizId());
         sessionManager.startSession(username, req.quizId(), questions);
         return mapper.convertValue(questions.get(0), QuestionDto.class);
     }
@@ -43,7 +43,7 @@ public class QuizSocketService {
         } else {
             QuizResult quizResult = session.evaluateResult();
             quizResult = resultRepository.save(quizResult);
-            userService.addQuizToUser(quizResult.getQuizId());
+            userService.addResultToUser(quizResult.getQuizId());
             sessionManager.removeSession(username);
             return quizResult;
         }

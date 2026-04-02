@@ -3,6 +3,7 @@ package com.bohemian.intellect.service;
 import com.bohemian.intellect.dto.QuizCreationRequest;
 import com.bohemian.intellect.dto.QuizDto;
 import com.bohemian.intellect.exception.ResourceNotFoundException;
+import com.bohemian.intellect.exception.UnauthorizedAccessException;
 import com.bohemian.intellect.model.Quiz;
 import com.bohemian.intellect.repository.QuizRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,7 +30,7 @@ public class QuizService {
         Quiz quiz = (Quiz)this.quizRepository.findById(id).orElseThrow(() -> {
             return new ResourceNotFoundException(id, "Quiz");
         });
-        return new ResponseEntity((QuizDto)this.mapper.convertValue(quiz, QuizDto.class), HttpStatus.OK);
+        return new ResponseEntity<>((QuizDto)this.mapper.convertValue(quiz, QuizDto.class), HttpStatus.OK);
     }
 
     public ResponseEntity<?> saveNewQuiz(QuizCreationRequest request) {
@@ -37,13 +38,20 @@ public class QuizService {
         Quiz quiz = new Quiz((String)null, request.title(), request.description(), username, Collections.emptyList());
         quiz = (Quiz)this.quizRepository.save(quiz);
         this.userService.addQuizToUser(quiz.getId());
-        return new ResponseEntity((QuizDto)this.mapper.convertValue(quiz, QuizDto.class), HttpStatus.CREATED);
+        return new ResponseEntity<>((QuizDto)this.mapper.convertValue(quiz, QuizDto.class), HttpStatus.CREATED);
     }
 
     public ResponseEntity<?> deleteQuiz(String id) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Quiz quiz = (Quiz)this.quizRepository.findById(id).orElseThrow(() -> {
+            return new ResourceNotFoundException(id, "Quiz");
+        });
+        if(!quiz.getUsername().equals(username)) {
+            throw new UnauthorizedAccessException("User does not have access to this quiz.");
+        }
         this.quizRepository.deleteById(id);
         this.userService.removeQuizToUser(id);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     public List<Quiz> getQuizByUsername() {
@@ -52,16 +60,21 @@ public class QuizService {
     }
 
     public ResponseEntity<?> updateQuiz(String id, QuizCreationRequest req) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Quiz quiz = (Quiz)this.quizRepository.findById(id).orElseThrow(() -> {
             return new ResourceNotFoundException(id, "Quiz");
         });
+        if(!quiz.getUsername().equals(username)) {
+            throw new UnauthorizedAccessException("User does not have access to this quiz.");
+        }
         quiz.setTitle(req.title());
         quiz.setDescription(req.description());
         quiz = (Quiz)this.quizRepository.save(quiz);
-        return new ResponseEntity((QuizDto)this.mapper.convertValue(quiz, QuizDto.class), HttpStatus.OK);
+        return new ResponseEntity<>((QuizDto)this.mapper.convertValue(quiz, QuizDto.class), HttpStatus.OK);
     }
 
     public void addQuestionToQuiz(String quizId, Long questionId) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Quiz quiz = (Quiz)this.quizRepository.findById(quizId).orElseThrow(() -> {
             return new ResourceNotFoundException(quizId, "Quiz");
         });
