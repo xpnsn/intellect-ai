@@ -28,8 +28,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/ws")
                 .addInterceptors(authHandshakeInterceptor)
                 .setHandshakeHandler(handshakeHandler())// WebSocket endpoint
-                .setAllowedOriginPatterns("*")
-                .withSockJS();// Allow cross-origin (for testing)
+                .setAllowedOriginPatterns("*");
+//                .withSockJS();// Allow cross-origin (for testing)
         // ⚠️ No .withSockJS() so we can use browser tools
     }
 

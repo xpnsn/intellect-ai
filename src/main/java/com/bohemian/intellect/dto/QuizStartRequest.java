@@ -5,5 +5,12 @@
 
 package com.bohemian.intellect.dto;
 
-public record QuizStartRequest(String quizId) {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+public record QuizStartRequest(
+    @NotBlank(message = "Quiz ID is required")
+    @Size(max = 64, message = "Quiz ID must be at most 64 characters")
+    String quizId
+) {
 }

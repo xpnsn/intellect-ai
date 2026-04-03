@@ -5,18 +5,18 @@ import com.bohemian.intellect.dto.RegistrationRequest;
 //import com.bohemian.intellect.service.AIService;
 import com.bohemian.intellect.service.EmailService;
 import com.bohemian.intellect.service.UserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import java.util.Map;
-import org.springframework.http.HttpStatus;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Validated
 public class AuthController {
     private final UserService userService;
     private final EmailService emailService;
@@ -35,12 +35,12 @@ public class AuthController {
     }
 
     @PostMapping({"/sign-up"})
-    public ResponseEntity<?> saveUser(@RequestBody RegistrationRequest request) {
+    public ResponseEntity<?> saveUser(@Valid @RequestBody RegistrationRequest request) {
         return userService.saveUser(request);
     }
 
     @PostMapping({"/login"})
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
         return userService.generateToken(request);
     }
 
@@ -50,7 +50,7 @@ public class AuthController {
     }
 
     @PostMapping({"/validate-otp/{otp}"})
-    public ResponseEntity<?> validateOtp(@PathVariable String otp) {
+    public ResponseEntity<?> validateOtp(@PathVariable @NotBlank(message = "OTP is required") String otp) {
         return emailService.validateOtp(otp);
     }
 

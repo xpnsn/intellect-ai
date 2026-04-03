@@ -1,5 +1,6 @@
 package com.bohemian.intellect.service;
 
+import com.bohemian.intellect.dto.ApiResponse;
 import com.bohemian.intellect.dto.EmailSenderDto;
 import com.bohemian.intellect.model.User;
 import com.bohemian.intellect.repository.RedisRepository;
@@ -70,9 +71,9 @@ public class EmailService {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username);
         if (user.isVerified()) {
-            return new ResponseEntity<>("Already Verified", HttpStatus.BAD_GATEWAY);
+            return new ResponseEntity<>(ApiResponse.of("Already Verified", HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
         } else if (redisRepository.validForOps(user.getId())) {
-            return new ResponseEntity<>("Timeout of " + redisRepository.getTimeoutTime(user.getId()), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ApiResponse.of("Timeout of " + redisRepository.getTimeoutTime(user.getId()), HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
         } else {
             SecureRandom random = new SecureRandom();
             StringBuilder otp = new StringBuilder();
@@ -81,7 +82,7 @@ public class EmailService {
             }
             redisRepository.saveOtp(user.getId(), otp.toString());
             sendMail(new EmailSenderDto(user.getEmail(), "otp", "Verify your email to Intellect", Map.of("otp", otp.toString())));
-            return new ResponseEntity<>("Sent", HttpStatus.OK);
+            return new ResponseEntity<>(ApiResponse.of("Sent",HttpStatus.OK), HttpStatus.OK);
         }
     }
 
@@ -89,19 +90,20 @@ public class EmailService {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username);
         if (redisRepository.getOtp(user.getId()) == null) {
-            return new ResponseEntity<>("Generate an otp", HttpStatus.BAD_REQUEST);
+
+            return new ResponseEntity<>(ApiResponse.of("Generate a new OTP.", HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
         } else if (otp.equals(redisRepository.getOtp(user.getId()))) {
             user.setVerified(true);
             userRepository.save(user);
             redisRepository.clear(user.getId());
-            return new ResponseEntity<>("Verified", HttpStatus.OK);
+            return new ResponseEntity<>(ApiResponse.of("Verified", HttpStatus.OK), HttpStatus.OK);
         } else {
             int x = redisRepository.retryCount(user.getId());
             if (x > 5) {
                 redisRepository.addCooldown(user.getId(), 3600L);
                 redisRepository.resetRetryCount(user.getId());
             }
-            return new ResponseEntity<>("Invalid OTP", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ApiResponse.of("Invalid OTP",HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
         }
     }
 }
