@@ -1,9 +1,6 @@
 package com.bohemian.intellect.dto;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +16,14 @@ public class GenerateRequest {
     @NotBlank(message = "Mode is required")
     @Size(max = 40, message = "Mode must be at most 40 characters")
     private String mode;
+
+    @NotBlank(message = "Initial Difficulty is required")
+    @Pattern(
+            regexp = "beginner|intermediate|advanced",
+            message = "Difficulty must be beginner, intermediate, or advanced"
+    )
+    private String initialDifficulty;
+
 
     @Size(max = 300, message = "Last question must be at most 300 characters")
     private String lastQuestion;

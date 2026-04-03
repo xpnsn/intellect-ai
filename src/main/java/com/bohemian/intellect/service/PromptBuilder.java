@@ -15,6 +15,7 @@ public class PromptBuilder {
             Context:
             - Topic: %s
             - Previous Question: %s
+            - InitialDifficulty: %s
             - User Answer: %s
             - Was Correct: %s
             - Target Concept: %s
@@ -29,8 +30,8 @@ public class PromptBuilder {
             Return JSON:
             {
               "question": "...",
-              "options": ["A", "B", "C", "D"],
-              "correctAnswer": "...",
+              "options": ["option1", "option2", "option3", "option4"],
+              "correctAnswer": "{exact matching string of correct answer}",
               "concept": "...",
               "difficulty": 1,
               "explanation": "...",
@@ -40,6 +41,7 @@ public class PromptBuilder {
             safe(request.getMode()),
             safe(request.getTopic()),
             safe(request.getLastQuestion()),
+            safe(request.getInitialDifficulty()),
             safe(request.getUserAnswer()),
             request.isWasCorrect(),
             safe(request.getTargetConcept()),

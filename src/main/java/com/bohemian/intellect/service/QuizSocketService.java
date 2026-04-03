@@ -69,7 +69,7 @@ public class QuizSocketService {
 
         QuizResult quizResult = session.evaluateResult();
         quizResult = resultRepository.save(quizResult);
-        userService.addResultToUser(quizResult.getQuizId());
+        userService.addResultToUser(quizResult.getResultID(), username);
         sessionManager.removeSession(username);
         return quizResult;
     }

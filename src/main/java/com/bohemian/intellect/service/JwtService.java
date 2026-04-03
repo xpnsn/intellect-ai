@@ -28,7 +28,7 @@ public class JwtService {
                 .header().empty())
                 .add("typ", "JWT")).and())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 86400L))
+                .expiration(new Date(System.currentTimeMillis() + 86400000L))
                 .signWith(this.getSignKey())
                 .compact();
     }

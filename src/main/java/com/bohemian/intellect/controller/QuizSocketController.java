@@ -45,7 +45,7 @@ public class QuizSocketController {
         String username = principal.getName();
         QuizSession session = sessionManager.startAiSession(username, req.topic(), req.level());
 
-        GenerateRequest request = new GenerateRequest(req.topic(), "diagnostic", "", "", false, req.topic(), 0);
+        GenerateRequest request = new GenerateRequest(req.topic(), "diagnostic", req.level(), "", "", false, req.topic(), 0);
         Question question = aiService.generateQuestion(request);
 
         session.setLastQuestion(question);

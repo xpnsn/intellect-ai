@@ -88,8 +88,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void addResultToUser(String id) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    public void addResultToUser(String id, String username) {
         User user = userRepository.findByUsername(username);
 
         user.getResultId().add(id);
